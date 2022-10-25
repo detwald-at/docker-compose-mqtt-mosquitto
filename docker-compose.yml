@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2.0
+    container_name: mosquitto
+    restart: unless-stopped
+    volumes:
+      - volumes/mosquitto:/mosquitto/:rw
+    ports:
+      - 1883:1883 #mqtt
+      - 9001:9001 #websocket
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mqtt.rule=Host(`$MQTT_DOMAIN`)"
+      - "traefik.http.routers.mqtt.entrypoints=https"
+      - "traefik.http.routers.mqtt.tls.certresolver=letsencrypt"
+      - "traefik.http.services.mqtt.loadbalancer.server.port=1883"
+
+      - "traefik.http.routers.mqtt-ws.rule=Host(`$WEBSOCKET_DOMAIN`)"
+      - "traefik.http.routers.mqtt-ws.entrypoints=https"
+      - "traefik.http.routers.mqtt-ws.tls.certresolver=letsencrypt"
+      - "traefik.http.services.mqtt-ws.loadbalancer.server.port=9001"
