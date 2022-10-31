@@ -6,7 +6,7 @@ services:
     container_name: mosquitto
     restart: unless-stopped
     volumes:
-      - volumes/mosquitto:/mosquitto/:rw
+      - ./volumes/mosquitto:/mosquitto/:rw
     ports:
       - 1883:1883 #mqtt
       - 9001:9001 #websocket
